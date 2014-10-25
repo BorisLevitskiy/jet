@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!doctype html>
 <html>
   <head>
@@ -43,4 +44,164 @@
     <script src="javascripts/scale.fix.js"></script>
     
   </body>
+=======
+<!DOCTYPE html>
+<html style="height: 100%" ng-app="app" ng-controller="GeneratorCtrl">
+<head>
+    <title></title>
+
+
+    <link rel="stylesheet" href="css/jet.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="js/angular.js"></script>
+    <script type="text/javascript" src="js/lodash.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/allowTabChar.js"></script>
+
+    <script type="text/javascript" src="app/dataStore.js"></script>
+    <script type="text/javascript" src="app/directives.js"></script>
+    <script type="text/javascript" src="app/app.js"></script>
+    <script type="text/javascript" src="app/generatorCtrl.js"></script>
+    <script type="text/javascript" src="app/jet.js"></script>
+
+</head>
+<body style="height: 100%" ng-init="showHelp=false;showTemplatePreview=false">
+
+<div class="row">
+    <div class="col-lg-3 col-lg-offset-1" >
+        <h2>Jet Data Generator</h2>
+    </div>
+
+    <div class="col-lg-offset-5 col-lg-2">
+        <button class="btn btn-default" href="javascript:void(0)" data-container="body" data-toggle="popover" data-placement="bottom"
+                jet-popover="helpHtml()"
+                data-html="true">
+            <span class="glyphicon glyphicon-question-sign"></span> Help
+        </button>
+    </div>
+</div>
+
+
+<div class="row">
+
+    <div class="col-lg-offset-1 col-lg-10">
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a href="#templateTab" role="tab" data-toggle="tab">Template</a></li>
+            <li><a href="#dataTab" role="tab" data-toggle="tab">Data</a></li>
+            <li><a href="#stashTab" role="tab" data-toggle="tab">Stash</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+
+            <!-- Template tab -->
+            <div class="tab-pane active" id="templateTab">
+
+                <div class="row">
+                    <div class="col-lg-10">
+                        <textarea id="template" rows="10" data-ng-model="config.template" ng-trim="false"
+                                  data-jet-allow-tab-char="config.tabsToSpaces"></textarea>
+
+                        <!-- Template Preview -->
+                        <div class="panel panel-default" data-ng-show="showTemplatePreview">
+                            <div data-ng-bind-html="config.template | highlightTemplate" class="panel-body preview">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <p>
+                            <div class="btn-group-vertical btn-group-sm" data-toggle="buttons">
+                            <label class="btn btn-default" data-ng-click="showTemplatePreview = !showTemplatePreview">
+                                <input type="checkbox">Preview
+                            </label>
+                            <label class="btn btn-default" data-ng-click="config.tabsToSpaces = !config.tabsToSpaces">
+                                <input type="checkbox"> Tabs to spaces
+                            </label>
+                        </div>
+                        </p>
+                        <p>
+                            <button class="btn btn-default btn-sm" data-ng-click="stashTemplate()">Stash Template</button>
+                        </p>
+                        <p>
+                            <button data-ng-click="generate()" class="btn btn-primary btn-lg">Generate</button>
+                        </p>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Data tab-->
+            <div class="tab-pane" id="dataTab">
+                <label><input type="checkbox" id="isJson" data-ng-model="config.isJson"/>Json</label>
+                <textarea id="data" rows="10" data-ng-model="config.data" data-jet-allow-tab-char="config.tabsToSpaces"></textarea>
+
+                <div ng-hide="config.isJson">
+                    <div>Split rows using:
+                        <input type="text" data-ng-model="config.dataRowSeparator" class="specificator"
+                               data-ng-class="{'known':isKnownSpec(config.dataRowSeparator)}">
+                        <span class="spec-descr">({{spec(config.dataRowSeparator)}})</span>
+                    </div>
+
+                    <div>Split columns using:
+                        <input type="text" data-ng-model="config.dataColumSeprator" class="specificator"
+                               data-ng-class="{'known':isKnownSpec(config.dataColumSeprator)}">
+                        <span class="spec-descr">({{spec(config.dataColumSeprator)}})</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="stashTab">
+                <div data-ng-repeat="t in stashTemplates">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="preview" data-ng-bind-html="t | highlightTemplate"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <a href="#" data-ng-click="setTemplateFromStash(t)"
+                                   data-tab-navigate="#templateTab"><strong>Set</strong></a>
+                                &nbsp;&nbsp;
+                                <a href="#" data-ng-click="setTemplateFromStash(t, true)" data-tab-navigate="#templateTab">Unstash</a>
+                            </div>
+                            <div class="col-lg-2">
+                                <a href="#" data-ng-click="removeTemplateFromStash($index)">
+                                    <span class="glyphicon glyphicon-remove"></span> Remove
+                                </a>
+                            </div>
+                        </div>
+
+                        <div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-offset-1 col-lg-10">
+        <div>Join template with:
+            <input type="text" data-ng-model="config.joinWith" class="specificator">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-offset-1 col-lg-10">
+    <h3>Output</h3>
+        <textarea id="output" rows="25" data-jet-allow-tab-char></textarea>
+    </div>
+</div>
+
+</body>
+>>>>>>> 838094ea2dd380ddb09d98dcbf0d976166794703
 </html>
