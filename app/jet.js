@@ -1,7 +1,7 @@
 window.jet = (function(){
     var j = {};
 
-    var shortExp = /([^\\]|^)(\$(item|index|global|first|last)([^\s\t:;"])*)+/g,
+    var shortExp = /(\${1,2}(item|index|global|first|last)([^\s\t:;"])*)+/g,
         bracetExpr = /{{([^\}]+)}}/g;
        // longExpRegex =/\$\(([^)]+)\)/g,
         //funcExpRegex = /<\$([^\$]+)\$>/g,
@@ -12,7 +12,9 @@ window.jet = (function(){
        // { regex: commentRegex, type:"Comment"},
         { regex: bracetExpr, type: "Expression", getExpression: function(matches) { return matches[1]; } },
        { regex:  shortExp, type: "Expression", getExpression: function(matches) {
-           return matches[0]; }  }
+           console.log('!!', matches);
+           return matches[1]; }
+       }
        // { regex:  funcExpRegex, type: "Expression" },
        // { regex:  escapeRegex, type: "Escape symbol" }
     ];
@@ -56,7 +58,7 @@ window.jet = (function(){
 
             var output = [];
             var global = {
-                $items:items,
+                items:items,
                 foo: function() {
                     return "this is foo";
                 }
@@ -68,7 +70,8 @@ window.jet = (function(){
                 output.push(generateItemRecord(template));
             }
 
-            return output.join(translateSpecs(opts.joinWith));
+            var result =  output.join(translateSpecs(opts.joinWith));
+            return result; //.replace(/\$\$/g, '$');
 
 
             function generateItemRecord(template) {
@@ -80,7 +83,6 @@ window.jet = (function(){
                         $last: i == items.length - 1,
                         $global:global
                     };
-
 
                 _.chain(jet.tokens).where(function(t) {
                     return t.type.toLowerCase() == "expression";
@@ -100,6 +102,11 @@ window.jet = (function(){
         }
 
         function replaceExpression(expr, match) {
+            var escapeRegex = /^\${2}/; // TODO: Promote to global scope
+            if(escapeRegex.test(match)) {
+                return match.replace(escapeRegex, '$'); // Escape
+            }
+
             var matches = Array.prototype.slice.call(arguments, 1), // Regex matched group
                 value = _.isFunction(expr.getExpression) ? expr.getExpression(matches) : matches[0];
 
@@ -108,6 +115,7 @@ window.jet = (function(){
         }
 
         function replaceFuncExpression(match, expr) {
+
             var funcExpr = "(function(){" + expr + "})()";
             //console.log('execute func expr: %s', funcExpr);
             return executeExpression(funcExpr, this);

@@ -1,10 +1,25 @@
 angular.module("app")
     .controller("GeneratorCtrl", function($scope, jet, dataStore, stash){
+        var defaultTemplate =
+            "$$item = $item\n" +
+            "$$item[0] = $item[0]\n" +
+            "$$item[1] = $item[1]\n" +
+            "$$last = $last\n" +
+            "$$first = $first\n" +
+            "$$global.items = $global.items\n";
+            "Is first: {{ $first ? 'yes' : 'no' }}\n" +
+            "Function: $global.foo()";
+
+        var defaultData =
+            "Alpha 1\n" +
+            "Beta 2\n" +
+            "Gamma 3\n";
+
         //console.log("Loaded isJson: %s",localStorage.getItem("isJson"));
         var configKey = 'config';
         var cfg = $scope.config = dataStore.getObject(configKey) || {
-            template: localStorage.getItem("template") || "$item",
-            data: localStorage.getItem("data") || "1\n2\n3",
+            template: localStorage.getItem("template") || defaultTemplate,
+            data: localStorage.getItem("data") || defaultData,
             isJson:localStorage.getItem("isJson") !== null || false,
             joinWith: localStorage.getItem("joinWith") || "\\n",
             dataRowSeparator:"\\n",
@@ -69,5 +84,6 @@ angular.module("app")
                         "<li><code>$global</code> - global object</li>" +
                     "</ul>";
         }
+
 
     });
