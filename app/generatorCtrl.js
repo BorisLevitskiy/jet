@@ -16,15 +16,17 @@ angular.module("app")
             "Gamma 3\n";
 
         //console.log("Loaded isJson: %s",localStorage.getItem("isJson"));
-        var configKey = 'config';
-        var cfg = $scope.config = dataStore.getObject(configKey) || {
-            template: localStorage.getItem("template") || defaultTemplate,
-            data: localStorage.getItem("data") || defaultData,
-            isJson:localStorage.getItem("isJson") !== null || false,
-            joinWith: localStorage.getItem("joinWith") || "\\n",
-            dataRowSeparator:"\\n",
-            dataColumSeprator:"\\s"
-        };
+        var configKey = 'config',
+            storedConfig = dataStore.getObject(configKey),
+            isFirstRun = storedConfig != null,
+            cfg = $scope.config = storedConfig || {
+                                                    template: localStorage.getItem("template") || defaultTemplate,
+                                                    data: localStorage.getItem("data") || defaultData,
+                                                    isJson:localStorage.getItem("isJson") !== null || false,
+                                                    joinWith: localStorage.getItem("joinWith") || "\\n",
+                                                    dataRowSeparator:"\\n",
+                                                    dataColumSeprator:"\\s"
+                                                  };
 
         $scope.stashTemplates = stash.getTemplates() || [];
 
@@ -77,13 +79,30 @@ angular.module("app")
         };
 
         $scope.helpHtml = function() {
-            return "<ul>" +
-                        "<li><code>$item</code> - current item</li>" +
-                        "<li><code>$first</code> - true if item is first in list</li>" +
-                        "<li><code>$last</code> - true if item is last in list</li>" +
-                        "<li><code>$global</code> - global object</li>" +
-                    "</ul>";
+            var html = ["<ul>"];
+
+            _.each($scope.macroses, function(m) {
+               html.push("<li><code>" + m.name + "</code> - " + m.description + "</li>");
+            });
+
+            html.push("</ul>");
+            return html.join("\n");
         }
+
+        $scope.macroses = [
+            { name: "$item", description: "current item (row)" },
+            { name: "$item[0]", description: "current item first column" },
+            { name: "$item[1]", description: "current item second column" },
+            { name: "$index", description: "index of an item" },
+            { name: "$first", description: "true if item is first in list" },
+            { name: "$last", description: "true if item is last in list" },
+            { name: "$odd", description: "true if $index is odd" },
+            { name: "$even", description: "true if $index is even" },
+            { name: "$global", description: "global object" },
+            { name: "$global.items", description: "all items" }
+        ];
+
+
 
 
     });

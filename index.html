@@ -50,13 +50,17 @@
         </ul>
 
         <!-- Tab panes -->
-        <div class="tab-content">
+        <div class="tab-content" style="padding: 10px 0">
 
             <!-- Template tab -->
             <div class="tab-pane active" id="templateTab">
 
                 <div class="row">
                     <div class="col-lg-10">
+                        <div style="padding: 10px">
+                            <a ng-repeat="m in macroses track by m.name" href="javascript:void(0)"
+                               jet-append-to="#template" title="{{m.description}}" style="margin-right: 10px; color:green">{{m.name}}</a>
+                        </div>
                         <textarea id="template" rows="10" data-ng-model="config.template" ng-trim="false"
                                   data-jet-allow-tab-char="config.tabsToSpaces"></textarea>
 
@@ -143,7 +147,9 @@
 <div class="row">
     <div class="col-lg-offset-1 col-lg-10">
         <div>Join template with:
-            <input type="text" data-ng-model="config.joinWith" class="specificator">
+            <input type="text" data-ng-model="config.joinWith" class="specificator"
+                   data-ng-class="{'known':isKnownSpec(config.joinWith)}">
+            <span class="spec-descr">({{spec(config.joinWith)}})</span>
         </div>
     </div>
 </div>

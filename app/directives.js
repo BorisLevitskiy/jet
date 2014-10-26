@@ -56,4 +56,12 @@ angular.module('directives', ['dataStore'])
             }
         }
     })
-;
+    .directive('jetAppendTo', function() {
+       return {
+           link: function(scope, element, attrs){
+               element.click(function(){
+                   $(attrs.jetAppendTo).pasteAfterCaret(this.innerText);
+               });
+           }
+       }
+    });

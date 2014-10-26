@@ -43,4 +43,17 @@
         }
         return this;
     }
+
+    $.fn.pasteAfterCaret = function(text) {
+        if(this.jquery) {
+            this.each(function() {
+                if (this.nodeType == 1) {
+                    var nodeName = this.nodeName.toLowerCase();
+                    if (nodeName == "textarea" || (nodeName == "input" && this.type == "text")) {
+                        pasteIntoInput(this, text);
+                    }
+                }
+            })
+        }
+    }
 })(jQuery);
