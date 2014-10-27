@@ -12,7 +12,14 @@ angular.module("app", ['dataStore', 'directives'])
     .factory('jet', function (){
         return window.jet;
     })
-
+    .run(function() {
+            // TODO: Move to directive
+            $("#copiedNotify").hide();
+            var clip = new ZeroClipboard(document.getElementById("btnCopyToClipBoard"));
+            clip.on('aftercopy', function() {
+                $("#copiedNotify").show().delay(3000).fadeOut();
+            });
+    })
     .filter('highlightData', function ($sce, jet) {
 
         return function (input) {
@@ -25,7 +32,7 @@ angular.module("app", ['dataStore', 'directives'])
             }
 
             return $sce.trustAsHtml(output);
-            ;
+
         }
     })
     .filter('highlightTemplate', function ($sce, jet) {

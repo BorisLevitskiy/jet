@@ -13,6 +13,7 @@
     <script type="text/javascript" src="js/lodash.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/allowTabChar.js"></script>
+    <script type="text/javascript" src="js/ZeroClipboard.js"></script>
 
     <script type="text/javascript" src="app/dataStore.js"></script>
     <script type="text/javascript" src="app/directives.js"></script>
@@ -156,7 +157,11 @@
 <!-- Output pane-->
 <div class="row-fluid">
     <div class="col-lg-offset-1 col-lg-10">
-    <h3>Output</h3>
+            <h3>
+                Output <button id="btnCopyToClipBoard" class="btn btn-sm btn-default" data-clipboard-target="output">Copy</button>
+                <small id="copiedNotify">copied</small>
+            </h3>
+
         <textarea id="output" rows="23" data-jet-allow-tab-char></textarea>
     </div>
 </div>
