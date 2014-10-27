@@ -29,12 +29,13 @@
         <h2>Jet Data Generator</h2>
     </div>
 
-    <div class="col-lg-offset-5 col-lg-2">
-        <button class="btn btn-default" href="javascript:void(0)" data-container="body" data-toggle="popover" data-placement="bottom"
+    <div class="col-lg-offset-5 col-lg-2" style="padding: 10px">
+        <!-- Help Button-->
+        <a href="javascript:void(0)" data-container="body" data-toggle="popover" data-placement="bottom"
                 jet-popover="helpHtml()"
-                data-html="true">
+                data-html="true" style="margin: 5px;">
             <span class="glyphicon glyphicon-question-sign"></span> Help
-        </button>
+        </a>
     </div>
 </div>
 
@@ -57,7 +58,9 @@
 
                 <div class="row">
                     <div class="col-lg-10">
+                        <!-- List of Macroses to insert -->
                         <div style="padding: 10px">
+                            <strong>Insert:</strong>
                             <a ng-repeat="m in macroses track by m.name" href="javascript:void(0)"
                                jet-append-to="#template" title="{{m.description}}" style="margin-right: 10px; color:green">{{m.name}}</a>
                         </div>

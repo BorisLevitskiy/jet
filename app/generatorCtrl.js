@@ -6,7 +6,7 @@ angular.module("app")
             "$$item[1] = $item[1]\n" +
             "$$last = $last\n" +
             "$$first = $first\n" +
-            "$$global.items = $global.items\n";
+            "$$global.items = $global.items\n" +
             "Is first: {{ $first ? 'yes' : 'no' }}\n" +
             "Function: $global.foo()";
 
@@ -18,7 +18,6 @@ angular.module("app")
         //console.log("Loaded isJson: %s",localStorage.getItem("isJson"));
         var configKey = 'config',
             storedConfig = dataStore.getObject(configKey),
-            isFirstRun = storedConfig != null,
             cfg = $scope.config = storedConfig || {
                                                     template: localStorage.getItem("template") || defaultTemplate,
                                                     data: localStorage.getItem("data") || defaultData,
@@ -30,7 +29,7 @@ angular.module("app")
 
         $scope.stashTemplates = stash.getTemplates() || [];
 
-        $scope.stashTemplate = function() {
+        $scope.stashTemplate = function(t) {
             $scope.stashTemplates = stash.stashTemplate(cfg.template);
             cfg.template = "";
         };
@@ -103,6 +102,7 @@ angular.module("app")
         ];
 
 
-
-
+        if($scope.isFirstRun) {
+            stash.stashTemplate(defaultTemplate);
+        }
     });

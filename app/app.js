@@ -12,7 +12,8 @@ angular.module("app", ['dataStore', 'directives'])
     .factory('jet', function (){
         return window.jet;
     })
-    .run(function() {
+    .run(function($rootScope, dataStore) {
+            $rootScope.isFirstRun = dataStore.getObject('config') != null; // TODO: Encapsulate getting config
             // TODO: Move to directive
             $("#copiedNotify").hide();
             var clip = new ZeroClipboard(document.getElementById("btnCopyToClipBoard"));
