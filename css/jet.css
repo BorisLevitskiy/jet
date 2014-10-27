@@ -1,4 +1,4 @@
-body { padding: 0px; }
+body { padding: 0px; margin: 0;}
 textarea {width: 100%; border: solid 1px lightgray}
 h2 {color: midnightblue }
 input {vertical-align: middle;}
