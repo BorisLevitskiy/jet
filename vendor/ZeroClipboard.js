@@ -262,7 +262,7 @@
   };
   /**
  * Get the presumed location of the "ZeroClipboard.swf" file, based on the location
- * of the executing JavaScript file (e.g. "ZeroClipboard.js", etc.).
+ * of the executing JavaScript file (e.g. "ZeroClipboard.vendor", etc.).
  *
  * @returns String
  * @private
@@ -1004,7 +1004,7 @@
       e = doc.createEvent("MouseEvents");
       if (e.initMouseEvent) {
         e.initMouseEvent.apply(e, args);
-        e._source = "js";
+        e._source = "vendor";
         target.dispatchEvent(e);
       }
     }
@@ -2117,7 +2117,7 @@
       if (!(event || (event = _window.event))) {
         return;
       }
-      if (event._source !== "js") {
+      if (event._source !== "vendor") {
         event.stopImmediatePropagation();
         event.preventDefault();
       }

@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
 
-    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="js/angular.js"></script>
-    <script type="text/javascript" src="js/lodash.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/allowTabChar.js"></script>
-    <script type="text/javascript" src="js/ZeroClipboard.js"></script>
+    <script type="text/javascript" src="vendor/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="vendor/angular.js"></script>
+    <script type="text/javascript" src="vendor/lodash.min.js"></script>
+    <script type="text/javascript" src="vendor/bootstrap.min.js"></script>
+    <script type="text/javascript" src="vendor/allowTabChar.js"></script>
+    <script type="text/javascript" src="vendor/ZeroClipboard.js"></script>
 
     <script type="text/javascript" src="app/dataStore.js"></script>
     <script type="text/javascript" src="app/directives.js"></script>
@@ -73,6 +73,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Template Sidebar -->
                     <div class="col-lg-1">
                         <p>
                             <div class="btn-group-vertical btn-group-sm" data-toggle="buttons">
@@ -87,9 +89,6 @@
                         <p>
                             <button class="btn btn-default btn-sm" data-ng-click="stashTemplate()">Stash Template</button>
                         </p>
-                        <p>
-                            <button data-ng-click="generate()" class="btn btn-primary btn-lg">Generate</button>
-                        </p>
                     </div>
                 </div>
 
@@ -98,17 +97,25 @@
 
             <!-- Data tab-->
             <div class="tab-pane" id="dataTab">
-                <label><input type="checkbox" id="isJson" data-ng-model="config.isJson"/>Json</label>
-                <textarea id="data" rows="10" data-ng-model="config.data" data-jet-allow-tab-char="config.tabsToSpaces"></textarea>
+                <!-- Data Field -->
+                <div class="row">
+                    <div class="col-lg-10">
+                        <label><input type="checkbox" id="isJson" data-ng-model="config.isJson"/>Json</label>
+                        <textarea id="data" rows="10" data-ng-model="config.data" data-jet-allow-tab-char="config.tabsToSpaces"></textarea>
+                    </div>
+                </div>
 
-                <div ng-hide="config.isJson">
-                    <div>Split rows using:
+                <!-- Data Config -->
+                <div class="row" ng-hide="config.isJson">
+                    <div class="col-lg-2">
+                        Split rows using:
                         <input type="text" data-ng-model="config.dataRowSeparator" class="specificator"
                                data-ng-class="{'known':isKnownSpec(config.dataRowSeparator)}">
                         <span class="spec-descr">({{spec(config.dataRowSeparator)}})</span>
-                    </div>
 
-                    <div>Split columns using:
+                    </div>
+                    <div class="col-lg-3">
+                        Split columns using:
                         <input type="text" data-ng-model="config.dataColumSeprator" class="specificator"
                                data-ng-class="{'known':isKnownSpec(config.dataColumSeprator)}">
                         <span class="spec-descr">({{spec(config.dataColumSeprator)}})</span>
@@ -148,8 +155,12 @@
 </div>
 
 <div class="row-fluid">
-    <div class="col-lg-offset-1 col-lg-10">
-        <div>Join template with:
+    <div class="col-lg-offset-1 col-lg-1">
+        <button data-ng-click="generate()" class="btn btn-primary">Generate</button>
+    </div>
+    <div class="col-lg-offset-1 col-lg-4">
+        <div>
+            Join template with:
             <input type="text" data-ng-model="config.joinWith" class="specificator"
                    data-ng-class="{'known':isKnownSpec(config.joinWith)}">
             <span class="spec-descr">({{spec(config.joinWith)}})</span>

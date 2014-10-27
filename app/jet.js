@@ -24,7 +24,7 @@ window.jet = (function(){
         { token: "\\s", translate: " ", description: "Space" },
         { token: "\\t", translate: "\t", description: "Tab" },
         { token: "\\n", translate: "\n", description: "Line end" },
-        { token: "(none)", translate: "", description: "Empty string"}
+        { token: "", translate: "", description: "Empty string"},
     ];
 
     j.findSpec = function(spec) {
