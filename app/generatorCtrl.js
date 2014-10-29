@@ -66,6 +66,8 @@ angular.module("app")
             //TODO: Replace by result parameter
             out.value = output;
             out.style.color = $scope.success ? "black" : "red";
+
+            $scope.output = output;
         };
 
         $scope.spec = function(token) {

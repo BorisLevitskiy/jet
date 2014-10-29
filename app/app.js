@@ -53,19 +53,22 @@ angular.module("app", ['dataStore', 'directives'])
             return $sce.trustAsHtml(toHtml(output));
         }
 
-    });
-//
-//    .filter('highlightOutput', function ($sce, jet) {
-//
-//        return function (input) {
-//            var replacements = {
-//                '<span class="integer">$&</span>' : /d+/g
-//            };
-//
-//            _.aggr
-//
-//            return $sce.trustAsHtml(toHtml(output));
-//        });
+    })
+    .filter('highlightOutput', function ($sce, jet) {
+
+        return function (input) {
+            var replacements = {
+                '<span class="doublequotes" style="font-weight:bold">$&</span>' : /"[^"]*"/g,
+                '<span class="singlequotes" style="font-weight:bold">$&</span>' : /'[^']*'/g
+            };
+
+            _.each(replacements, function(regex, rep) {
+               input = input.replace(regex, rep);
+            });
+
+            return $sce.trustAsHtml(toHtml(input));
+        };
+})
 
 //TODO: Move to htmlHelper factory
 function toHtml(input) {
