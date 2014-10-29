@@ -51,6 +51,7 @@
                     var nodeName = this.nodeName.toLowerCase();
                     if (nodeName == "textarea" || (nodeName == "input" && this.type == "text")) {
                         pasteIntoInput(this, text);
+                        $(this).trigger('change');
                     }
                 }
             })
