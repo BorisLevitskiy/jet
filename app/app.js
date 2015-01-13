@@ -2,11 +2,10 @@
 
 /*
     TODO: Ideas:
-    1. [x] Quick switch between templates (like shelves)
-    2. [x] List of all macroses being available
-    3. [ ] Page layout select
-    4. [ ] Auto-complete
-    5. [ ] Custom $global functions
+    [ ] Split by regular expression    
+    [ ] Page layout select
+    [ ] Auto-complete
+    [ ] Custom $global functions
  */
 angular.module("app", ['dataStore', 'directives'])
     .factory('jet', function (){
