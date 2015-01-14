@@ -1,5 +1,5 @@
 angular.module("app")
-    .controller("GeneratorCtrl", function($scope, jet, dataStore, stash){
+    .controller("GeneratorCtrl", function($scope, jet, dataStore, stash, dataAdapters){
         var defaultTemplate =
             "$$item = $item\n" +
             "$$item[0] = $item[0]\n" +
@@ -56,8 +56,15 @@ angular.module("app")
             var output;
 
             try {
-                output = jet.generateTemplate($scope.config);
+
+                var opts = $scope.config,
+                    dataAdapter = opts.isJson ? dataAdapters.json : dataAdapters.dataTable,
+                    items = dataAdapter.parse(opts.data, opts);
+
+                output = jet.generateTemplate(items, { template: opts.template, joinWith: opts.joinWith });
+
                 $scope.success = true;
+
             } catch (ex) {
                 output = ex.stack;
                 $scope.success = false;
