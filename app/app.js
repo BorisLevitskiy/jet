@@ -57,6 +57,7 @@ angular.module("app", ['dataStore', 'directives'])
     .filter('highlightOutput', function ($sce, jet) {
 
         return function (input) {
+            return input;
             var replacements = {
                 '<span class="doublequotes" style="font-weight:bold">$&</span>' : /"[^"]*"/g,
                 '<span class="singlequotes" style="font-weight:bold">$&</span>' : /'[^']*'/g

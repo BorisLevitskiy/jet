@@ -18,22 +18,12 @@ window.jet = (function(){
        // { regex:  escapeRegex, type: "Escape symbol" }
     ];
 
-    j.specificators = [
-        { token: "\\s", translate: " ", description: "Space" },
-        { token: "\\t", translate: "\t", description: "Tab" },
-        { token: "\\n", translate: "\n", description: "Line end" },
-        { token: "", translate: "", description: "Empty string"}
-    ];
-
-    j.findSpec = function(spec) {
-        var specs = jet.specificators;
-        for (var i = 0; i < specs.length; i++) {
-            if(specs[i].token === spec) {
-                return specs[i];
-            }
+    var itemPrototype = {
+        trim: function() {
+            return this.toString().replace(/(^[\t\s]+)|([\t\s]+$)/gi, "");
         }
-        return null;
-    };
+    }
+
 
     j.generateTemplate = (function () {
 
@@ -54,11 +44,10 @@ window.jet = (function(){
 
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
-
                 output.push(generateItemRecord(template));
             }
 
-            var result =  output.join(opts.joinWith);
+            var result = output.join(opts.joinWith);
             return result; //.replace(/\$\$/g, '$');
 
             function generateItemRecord(template) {

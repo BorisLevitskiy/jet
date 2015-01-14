@@ -64,4 +64,30 @@ angular.module('directives', ['dataStore'])
                });
            }
        }
+    })
+    .directive("jetSymbolEdit", function(symbols) {
+        return {
+            scope: { },
+            replace: true,
+            transclude: true,
+            require: "ngModel",
+            template: '<input type="text" class="specificator" ng-class="{ \'known\': isKnown() }"></input>',
+            link: function(scope, element, attrs, ngModel) {
+
+                var descrEl = angular.element('<span class="spec-descr">Known</span>');
+
+                scope.isKnown = function(symbol){
+                    var known = symbols.find(ngModel.$modelValue)
+
+                    if(known != null){
+                        descrEl.html(known.description); // TODO: ugly hack!
+                    }
+
+                    return known != null;
+                }
+
+                element.after(descrEl);
+
+            }
+        }
     });

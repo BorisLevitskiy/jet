@@ -56,17 +56,18 @@ angular.module("app")
             var output;
 
             try {
+                console.log($scope.config);
 
-                var opts = $scope.config,
-
-                    dataAdapter = opts.isJson ? dataAdapters.json : dataAdapters.dataTable,
-
-                    items = dataAdapter.parse(opts.data, {
-                        dataColumnSeparator: symbols.translate(opts.dataColumnSeparator),
-                        dataRowSeparator: symbols.translate(opts.dataRowSeparator)
+                var cfg = $scope.config,
+                    dataAdapter = cfg.isJson ? dataAdapters.json : dataAdapters.dataTable,
+                    items = dataAdapter.parse(cfg.data, {
+                        dataColumnSeparator: symbols.translate(cfg.dataColumnSeparator),
+                        dataRowSeparator: symbols.translate(cfg.dataRowSeparator),
+                        dataColumnSeparatorRegex: cfg.dataColumnSeparatorRegex
                     });
+                output = jet.generateTemplate(items, { template: cfg.template, joinWith: symbols.translate(cfg.joinWith) });
 
-                output = jet.generateTemplate(items, { template: opts.template, joinWith: symbols.translate(opts.joinWith) });
+
 
                 $scope.success = true;
 

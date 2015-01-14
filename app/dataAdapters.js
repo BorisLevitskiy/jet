@@ -15,28 +15,35 @@ angular.module('app')
 
             dataTable: {
                 parse: function(data, opts) {
-                    console.log('dataTable.parse()', opts);
+
+                    var i = 0,
+                        resultList = [],
+                        rowSeparator,
+                        colSeparator,
+                        dataRows; //TODO: handle \r\n
+
                     opts.dataColumnSeparator = opts.dataColumnSeparator || " ";
                     opts.dataRowSeparator = opts.dataRowSeparator || "\n";
+                    opts.dataColumnSeparatorRegex = !!opts.dataColumnSeparatorRegex;
+                    opts.dataRowSeparatorRegex = !!opts.dataRowSeparatorRegex;
 
-                    var items = [],
-                        list = this.normalizeData(data)
-                            .split(opts.dataRowSeparator); //TODO: handle \r\n
+                    rowSeparator = opts.dataRowSeparatorRegex ? new RegExp(opts.dataRowSeparator, "ig") : opts.dataRowSeparator;
+                    colSeparator = opts.dataColumnSeparatorRegex ? new RegExp(opts.dataColumnSeparator, "ig") : opts.dataColumnSeparator;
 
-                    for (var i = 0; i < list.length; i++) {
-                        items.push(this.parseItem(list[i], opts.dataColumnSeparator));
+                    dataRows = this.normalizeData(data).split(rowSeparator);
+
+                    for (; i < dataRows.length; i++) {
+                        resultList.push(this.parseItem(dataRows[i], colSeparator));
                     }
 
-                    console.log('dataTable.parse()', opts);
-                    console.table(items);
-
-                    return items;
+                    return resultList;
                 },
-                parseItem: function (str, dataColumnSeprator) {
+
+                parseItem: function (str, colSeparator) {
                     var item = {};
                     item.value = str;
 
-                    var parts = str.split(dataColumnSeprator);
+                    var parts = str.split(colSeparator);
                     for (var i = 0; i < parts.length; i++) {
                         item[i] = parts[i];
                     }

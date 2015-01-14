@@ -110,16 +110,13 @@
                 <div class="row" ng-hide="config.isJson">
                     <div class="col-lg-2">
                         Split rows using:
-                        <input type="text" data-ng-model="config.dataRowSeparator" class="specificator"
-                               data-ng-class="{'known':isKnownSpec(config.dataRowSeparator)}">
-                        <span class="spec-descr">({{spec(config.dataRowSeparator)}})</span>
-
+                        <input type="text" data-ng-model="config.dataRowSeparator" jet-symbol-edit="">
+                        <label><input type="checkbox" ng-model="config.dataRowSeparatorRegex"> Regex</label>
                     </div>
                     <div class="col-lg-3">
                         Split columns using:
-                        <input type="text" data-ng-model="config.dataColumnSeparator" class="specificator"
-                               data-ng-class="{'known':isKnownSpec(config.dataColumnSeparator)}">
-                        <span class="spec-descr">({{spec(config.dataColumnSeparator)}})</span>
+                        <input type="text" data-ng-model="config.dataColumnSeparator" jet-symbol-edit="">
+                        <label><input type="checkbox" ng-model="config.dataColumnSeparatorRegex"> Regex</label>
                     </div>
                 </div>
             </div>
@@ -162,9 +159,7 @@
     <div class="col-lg-offset-1 col-lg-4">
         <div>
             Join template with:
-            <input type="text" data-ng-model="config.joinWith" class="specificator"
-                   data-ng-class="{'known':isKnownSpec(config.joinWith)}">
-            <span class="spec-descr">({{spec(config.joinWith)}})</span>
+            <input type="text" data-ng-model="config.joinWith" jet-symbol-edit="">
         </div>
     </div>
 </div>
@@ -178,7 +173,7 @@
             </h3>
 
         <textarea id="output" rows="23" data-jet-allow-tab-char></textarea>
-        <div data-ng-bind-html="output | highlightOutput"></div>
+        <!--<div data-ng-bind-html="output"></div>-->
     </div>
 </div>
 
