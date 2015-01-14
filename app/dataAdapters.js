@@ -1,5 +1,13 @@
 angular.module('app')
-    .factory('dataAdapters', function() {
+    .factory('globalDataItemPrototype', function() {
+        return {
+            hello: function() {
+                return "Hello, this is Global Prototype";
+            }
+        }
+    })
+    .factory('dataAdapters', function(globalDataItemPrototype) {
+
         return  {
             json: {
                 parse: function (data, config) {
@@ -14,14 +22,7 @@ angular.module('app')
             },
 
             dataTable: {
-                dataItemPrototype: {
-                    trim: function() {
-                        return this.toString().replace(/(^[\t\s]+)|([\t\s]+$)/gi, "");
-                    },
-                    toString: function() {
-                        return this.value;
-                    }
-                },
+                dataItemPrototype:createDataTableItemPrototype(),
                 parse: function(data, opts) {
 
                     var i = 0,
@@ -34,6 +35,7 @@ angular.module('app')
                     opts.dataRowSeparator = opts.dataRowSeparator || "\n";
                     opts.dataColumnSeparatorRegex = !!opts.dataColumnSeparatorRegex;
                     opts.dataRowSeparatorRegex = !!opts.dataRowSeparatorRegex;
+                    opts.globalPrototype = "";
 
                     rowSeparator = opts.dataRowSeparatorRegex ? new RegExp(opts.dataRowSeparator, "ig") : opts.dataRowSeparator;
                     colSeparator = opts.dataColumnSeparatorRegex ? new RegExp(opts.dataColumnSeparator, "ig") : opts.dataColumnSeparator;
@@ -48,6 +50,7 @@ angular.module('app')
                 },
 
                 parseItem: function (str, colSeparator) {
+
                     var item = Object.create(this.dataItemPrototype);
                     item.value = str;
 
@@ -67,6 +70,20 @@ angular.module('app')
                 }
             }
         };
+
+        function createDataTableItemPrototype() {
+            var dataItemPrototype = Object.create(globalDataItemPrototype);
+
+            _.extend(dataItemPrototype, {
+                trim: function() {
+                    return this.toString().replace(/(^[\t\s]+)|([\t\s]+$)/gi, "");
+                },
+                toString: function() {
+                    return this.value;
+                }
+            });
+            return dataItemPrototype;
+        }
     })
     .factory("symbols", function() {
 
