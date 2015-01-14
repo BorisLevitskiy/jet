@@ -12,7 +12,6 @@ window.jet = (function(){
        // { regex: commentRegex, type:"Comment"},
         { regex: bracetExpr, type: "Expression", getExpression: function(matches) { return matches[1]; } },
        { regex:  shortExp, type: "Expression", getExpression: function(matches) {
-           console.log('!!', matches);
            return matches[1]; }
        }
        // { regex:  funcExpRegex, type: "Expression" },
@@ -43,9 +42,6 @@ window.jet = (function(){
             opts.template = opts.template || "";
             opts.joinWith = opts.joinWith || "\n";
 
-            console.log("template", opts.template);
-
-
             var template = opts.template;
 
             var output = [];
@@ -62,7 +58,7 @@ window.jet = (function(){
                 output.push(generateItemRecord(template));
             }
 
-            var result =  output.join(translateSpecs(opts.joinWith));
+            var result =  output.join(opts.joinWith);
             return result; //.replace(/\$\$/g, '$');
 
             function generateItemRecord(template) {
@@ -135,18 +131,6 @@ window.jet = (function(){
 
         return generate;
     })();
-
-    function translateSpecs(input){
-
-        var out = input;
-        for (var i = 0; i < j.specificators.length; i++) {
-            var spec = j.specificators[i];
-            out = out.replace(spec.token, spec.translate);
-        }
-        return out;
-    }
-
-    j.translateSpecs = translateSpecs;
 
     return j;
 })();

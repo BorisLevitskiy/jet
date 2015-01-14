@@ -1,5 +1,5 @@
 angular.module("app")
-    .controller("GeneratorCtrl", function($scope, jet, dataStore, stash, dataAdapters){
+    .controller("GeneratorCtrl", function($scope, jet, dataStore, stash, dataAdapters, symbols){
         var defaultTemplate =
             "$$item = $item\n" +
             "$$item[0] = $item[0]\n" +
@@ -24,7 +24,7 @@ angular.module("app")
                                                     isJson:localStorage.getItem("isJson") !== null || false,
                                                     joinWith: localStorage.getItem("joinWith") || "\\n",
                                                     dataRowSeparator:"\\n",
-                                                    dataColumSeprator:"\\s"
+                                                    dataColumnSeparator:"\\s"
                                                   };
 
         $scope.stashTemplates = stash.getTemplates() || [];
@@ -58,10 +58,15 @@ angular.module("app")
             try {
 
                 var opts = $scope.config,
-                    dataAdapter = opts.isJson ? dataAdapters.json : dataAdapters.dataTable,
-                    items = dataAdapter.parse(opts.data, opts);
 
-                output = jet.generateTemplate(items, { template: opts.template, joinWith: opts.joinWith });
+                    dataAdapter = opts.isJson ? dataAdapters.json : dataAdapters.dataTable,
+
+                    items = dataAdapter.parse(opts.data, {
+                        dataColumnSeparator: symbols.translate(opts.dataColumnSeparator),
+                        dataRowSeparator: symbols.translate(opts.dataRowSeparator)
+                    });
+
+                output = jet.generateTemplate(items, { template: opts.template, joinWith: symbols.translate(opts.joinWith) });
 
                 $scope.success = true;
 
@@ -77,13 +82,13 @@ angular.module("app")
             $scope.output = output;
         };
 
-        $scope.spec = function(token) {
-            var spec = jet.findSpec(token);
+        $scope.spec = function(symbolOrSynonym) {
+            var spec = symbols.find(symbolOrSynonym);
             return spec == null ? '' : spec.description;
         };
 
-        $scope.isKnownSpec = function(spec) {
-           return jet.findSpec(spec) !== null;
+        $scope.isKnownSpec = function(symbolOrSynonym) {
+           return symbols.isKnown(symbolOrSynonym);
         };
 
         $scope.helpHtml = function() {
