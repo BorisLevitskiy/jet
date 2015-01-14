@@ -12,47 +12,19 @@ window.jet = (function(){
        // { regex: commentRegex, type:"Comment"},
         { regex: bracetExpr, type: "Expression", getExpression: function(matches) { return matches[1]; } },
        { regex:  shortExp, type: "Expression", getExpression: function(matches) {
-           console.log('!!', matches);
            return matches[1]; }
        }
        // { regex:  funcExpRegex, type: "Expression" },
        // { regex:  escapeRegex, type: "Escape symbol" }
     ];
 
-    j.specificators = [
-        { token: "\\s", translate: " ", description: "Space" },
-        { token: "\\t", translate: "\t", description: "Tab" },
-        { token: "\\n", translate: "\n", description: "Line end" },
-        { token: "", translate: "", description: "Empty string"}
-    ];
-
-    j.findSpec = function(spec) {
-        var specs = jet.specificators;
-        for (var i = 0; i < specs.length; i++) {
-            if(specs[i].token === spec) {
-                return specs[i];
-            }
-        }
-        return null;
-    };
-
     j.generateTemplate = (function () {
 
-        function generate(options) {
+        function generate(items, options) {
             var opts = options;
-            opts.data = opts.data || "";
             opts.template = opts.template || "";
-            opts.dataColumSeprator = opts.dataColumSeprator || " ";
-            opts.dataRowSeparator = opts.dataRowSeparator || "\n";
             opts.joinWith = opts.joinWith || "\n";
 
-            console.log("template", opts.template);
-
-            var dataAdapter = opts.isJson
-                ? j.dataAdapters.json
-                : j.dataAdapters.dataTable;
-
-            var items = dataAdapter.parse(opts.data, opts);
             var template = opts.template;
 
             var output = [];
@@ -65,40 +37,38 @@ window.jet = (function(){
 
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
-
-                output.push(generateItemRecord(template));
+                output.push(generateItemRecord(item, i, items, template, global));
             }
 
-            var result =  output.join(translateSpecs(opts.joinWith));
+            var result = output.join(opts.joinWith);
             return result; //.replace(/\$\$/g, '$');
+        }
 
-            function generateItemRecord(template) {
+        function generateItemRecord(dataItem, index, allDataItems, template, global) { //TODO: Too many arguments
 
-                var context = {
-                        $item: item,
-                        $index: i,
-                        $first: i == 0,
-                        $odd: i % 2 == 1,
-                        $even: i % 2 == 0,
-                        $last: i == items.length - 1,
-                        $global:global
-                    };
+            var context = {
+                $item: dataItem,
+                $index: index,
+                $first: index == 0,
+                $odd: index % 2 == 1,
+                $even: index % 2 == 0,
+                $last: index == allDataItems.length - 1,
+                $global:global
+            };
 
-                _.chain(jet.tokens).where(function(t) {
-                    return t.type.toLowerCase() == "expression";
-                }).each(function(expr) {
-                    var processExpression = _.partial(replaceExpression.bind(context), expr);
-                    template = template.replace(expr.regex, processExpression)
-                });
+            _.chain(jet.tokens).where(function(t) {
+                return t.type.toLowerCase() == "expression";
+            }).each(function(expr) {
+                var processExpression = _.partial(replaceExpression.bind(context), expr);
+                template = template.replace(expr.regex, processExpression)
+            });
 
-                return  template;
-                  //  .replace(commentRegex, "")
-                    //.replace(bracetExpr, replaceExpression.bind(context));
-                    //.replace(longExpRegex, replaceExpression.bind(context))
-                   // .replace(funcExpRegex, replaceFuncExpression.bind(context))
-                    //.replace(escapeRegex, "$1");
-            }
-
+            return  template;
+            //  .replace(commentRegex, "")
+            //.replace(bracetExpr, replaceExpression.bind(context));
+            //.replace(longExpRegex, replaceExpression.bind(context))
+            // .replace(funcExpRegex, replaceFuncExpression.bind(context))
+            //.replace(escapeRegex, "$1");
         }
 
         function replaceExpression(expr, match) {
@@ -142,71 +112,6 @@ window.jet = (function(){
 
         return generate;
     })();
-
-    j.dataAdapters = {
-
-        json: {
-            parse: function (data, config) {
-                try
-                {
-                    return JSON.parse(data);
-                }
-                catch (e) {
-                    throw new Error("Failed to parse JSON data: " + e.message, e);
-                }
-            }
-        },
-
-        dataTable: {
-            parse: function(data, config) {
-
-                var items = [],
-                    list = this.normalizeData(data)
-                                .split(translateSpecs(
-                                        config.dataRowSeparator)); //todo: handle \r\n
-
-                for (var i = 0; i < list.length; i++) {
-                    items.push(this.parseItem(list[i], config.dataColumSeprator));
-                }
-                return items;
-            },
-            parseItem: function (str, dataColumSeprator) {
-                var item = {};
-                item.value = str;
-
-                var parts = str.split(j.translateSpecs(dataColumSeprator));
-                for (var i = 0; i < parts.length; i++) {
-                    item[i] = parts[i];
-                }
-
-                item.first = parts[0];
-                item.last = parts[parts.length - 1];
-
-                item.toString = function () {
-                    return this.value;
-                };
-
-                console.log('created item', item);
-
-                return item;
-            },
-            normalizeData: function (data) {
-                return data.replace(/\r|\r\n|\n/g, "\n");
-            }
-        }
-    };
-
-    function translateSpecs(input){
-
-        var out = input;
-        for (var i = 0; i < j.specificators.length; i++) {
-            var spec = j.specificators[i];
-            out = out.replace(spec.token, spec.translate);
-        }
-        return out;
-    }
-
-    j.translateSpecs = translateSpecs;
 
     return j;
 })();

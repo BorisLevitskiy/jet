@@ -21,6 +21,15 @@ input.known {
     font-weight: bold;
 }
 
+.spec-descr {
+    color: gray;
+    margin-left: 5px;
+    visibility: hidden;
+}
+.known + .spec-descr {
+    visibility: visible;
+}
+
 .preview {
     border:dotted 1px #eee;
 }
@@ -44,6 +53,3 @@ input.known {
     color:darkgreen;
 }
 
-.spec-descr {
-    color:gray;
-}

@@ -1,5 +1,5 @@
 angular.module("app")
-    .controller("GeneratorCtrl", function($scope, jet, dataStore, stash){
+    .controller("GeneratorCtrl", function($scope, jet, dataStore, stash, dataAdapters, symbols){
         var defaultTemplate =
             "$$item = $item\n" +
             "$$item[0] = $item[0]\n" +
@@ -24,7 +24,7 @@ angular.module("app")
                                                     isJson:localStorage.getItem("isJson") !== null || false,
                                                     joinWith: localStorage.getItem("joinWith") || "\\n",
                                                     dataRowSeparator:"\\n",
-                                                    dataColumSeprator:"\\s"
+                                                    dataColumnSeparator:"\\s"
                                                   };
 
         $scope.stashTemplates = stash.getTemplates() || [];
@@ -56,8 +56,21 @@ angular.module("app")
             var output;
 
             try {
-                output = jet.generateTemplate($scope.config);
+                console.log($scope.config);
+
+                var cfg = $scope.config,
+                    dataAdapter = cfg.isJson ? dataAdapters.json : dataAdapters.dataTable,
+                    items = dataAdapter.parse(cfg.data, {
+                        dataColumnSeparator: symbols.translate(cfg.dataColumnSeparator),
+                        dataRowSeparator: symbols.translate(cfg.dataRowSeparator),
+                        dataColumnSeparatorRegex: cfg.dataColumnSeparatorRegex
+                    });
+                output = jet.generateTemplate(items, { template: cfg.template, joinWith: symbols.translate(cfg.joinWith) });
+
+
+
                 $scope.success = true;
+
             } catch (ex) {
                 output = ex.stack;
                 $scope.success = false;
@@ -66,15 +79,17 @@ angular.module("app")
             //TODO: Replace by result parameter
             out.value = output;
             out.style.color = $scope.success ? "black" : "red";
+
+            $scope.output = output;
         };
 
-        $scope.spec = function(token) {
-            var spec = jet.findSpec(token);
+        $scope.spec = function(symbolOrSynonym) {
+            var spec = symbols.find(symbolOrSynonym);
             return spec == null ? '' : spec.description;
         };
 
-        $scope.isKnownSpec = function(spec) {
-           return jet.findSpec(spec) !== null;
+        $scope.isKnownSpec = function(symbolOrSynonym) {
+           return symbols.isKnown(symbolOrSynonym);
         };
 
         $scope.helpHtml = function() {
