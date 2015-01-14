@@ -4,6 +4,7 @@ h2 {color: midnightblue }
 input {vertical-align: middle;}
 input[type="text"] { border: solid 1px lightgray; }
 
+#output {margin-top:10px;}
 /*beautify*/
 .token {
     background: whitesmoke;

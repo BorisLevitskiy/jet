@@ -68,7 +68,10 @@
                         </div>
                         <textarea id="template" rows="10" data-ng-model="config.template" ng-trim="false"
                                   data-jet-allow-tab-char="config.tabsToSpaces"></textarea>
-
+                        <div>
+                            Join template with:
+                            <input type="text" data-ng-model="config.joinWith" jet-symbol-edit="">
+                        </div>
                         <!-- Template Preview -->
                         <div class="panel panel-default" data-ng-show="showTemplatePreview">
                             <div data-ng-bind-html="config.template | highlightTemplate" class="panel-body preview">
@@ -153,26 +156,21 @@
     </div>
 </div>
 
+
+<!-- Control Button-->
 <div class="row-fluid">
-    <div class="col-lg-offset-1 col-lg-1">
-        <button data-ng-click="generate()" class="btn btn-primary">Generate</button>
-    </div>
-    <div class="col-lg-offset-1 col-lg-4">
-        <div>
-            Join template with:
-            <input type="text" data-ng-model="config.joinWith" jet-symbol-edit="">
+    <div class="col-lg-offset-1 col-lg-10">
+        <div class="btn-group" role="group">
+            <button data-ng-click="generate()" class="btn btn-primary">Generate</button>
+            <button id="btnCopyToClipBoard" class="btn btn-default" data-clipboard-target="output">Copy</button>
         </div>
+        <small id="copiedNotify">copied</small>
     </div>
 </div>
 
 <!-- Output pane-->
-<div class="row-fluid">
+ <div class="row-fluid">
     <div class="col-lg-offset-1 col-lg-10">
-            <h3>
-                Output <button id="btnCopyToClipBoard" class="btn btn-sm btn-default" data-clipboard-target="output">Copy</button>
-                <small id="copiedNotify">copied</small>
-            </h3>
-
         <textarea id="output" rows="23" data-jet-allow-tab-char></textarea>
         <!--<div data-ng-bind-html="output"></div>-->
     </div>
