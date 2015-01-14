@@ -14,6 +14,14 @@ angular.module('app')
             },
 
             dataTable: {
+                dataItemPrototype: {
+                    trim: function() {
+                        return this.toString().replace(/(^[\t\s]+)|([\t\s]+$)/gi, "");
+                    },
+                    toString: function() {
+                        return this.value;
+                    }
+                },
                 parse: function(data, opts) {
 
                     var i = 0,
@@ -40,7 +48,7 @@ angular.module('app')
                 },
 
                 parseItem: function (str, colSeparator) {
-                    var item = {};
+                    var item = Object.create(this.dataItemPrototype);
                     item.value = str;
 
                     var parts = str.split(colSeparator);
@@ -50,10 +58,7 @@ angular.module('app')
 
                     item.first = parts[0];
                     item.last = parts[parts.length - 1];
-
-                    item.toString = function () {
-                        return this.value;
-                    };
+                    item.length = parts.length;
 
                     return item;
                 },
