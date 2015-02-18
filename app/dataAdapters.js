@@ -3,6 +3,9 @@ angular.module('app')
         return {
             hello: function() {
                 return "Hello, this is Global Prototype";
+            },
+            translate: function(dictionary) {
+                return dictionary[this.valueOf()];
             }
         }
     })
