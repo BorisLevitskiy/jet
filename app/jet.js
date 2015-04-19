@@ -30,18 +30,8 @@ window.jet = (function(){
             var template = opts.template;
 
             var output = [];
-            var global = {
-                items:items,
-                foo: function() {
-                    return "this is foo";
-                },
-                translate: function(string, dictionary) {
-                    if(dictionary.hasOwnProperty(string)) {
-                        return dictionary[string];
-                    }
-                    return string;
-                }
-            };
+            var global = Object.create(this.prototype.globalPrototype);
+            global.items = items;
 
             console.log('Data Items:', items);
 
@@ -57,7 +47,7 @@ window.jet = (function(){
         function generateItemRecord(dataItem, index, allDataItems, template, global) { //TODO: Too many arguments
 
             var context = {
-                $item: dataItem,
+                $item: j.prototype.setPrototype(dataItem), // TODO: Nasty clojure reference
                 $index: index,
                 $first: index == 0,
                 $odd: index % 2 == 1,
@@ -65,6 +55,8 @@ window.jet = (function(){
                 $last: index == allDataItems.length - 1,
                 $global:global
             };
+
+            console.log('Context', context);
 
             _.chain(jet.tokens).where(function(t) {
                 return t.type.toLowerCase() == "expression";
