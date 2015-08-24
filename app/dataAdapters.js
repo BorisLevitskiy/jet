@@ -1,16 +1,5 @@
 angular.module('app')
-    .factory('globalDataItemPrototype', function() {
-        return {
-            hello: function() {
-                return "Hello, this is Global Prototype";
-            },
-            translate: function(dictionary) {
-                return dictionary[this.valueOf()];
-            }
-        }
-    })
-    .factory('dataAdapters', function(globalDataItemPrototype) {
-
+    .factory('dataAdapters', function() {
         return  {
             json: {
                 parse: function (data, config) {
@@ -25,7 +14,6 @@ angular.module('app')
             },
 
             dataTable: {
-                dataItemPrototype:createDataTableItemPrototype(),
                 parse: function(data, opts) {
 
                     var i = 0,
@@ -54,7 +42,7 @@ angular.module('app')
 
                 parseItem: function (str, colSeparator) {
 
-                    var item = Object.create(this.dataItemPrototype);
+                    var item = {};
                     item.value = str;
 
                     var parts = str.split(colSeparator);
@@ -73,20 +61,6 @@ angular.module('app')
                 }
             }
         };
-
-        function createDataTableItemPrototype() {
-            var dataItemPrototype = Object.create(globalDataItemPrototype);
-
-            _.extend(dataItemPrototype, {
-                trim: function() {
-                    return this.toString().replace(/(^[\t\s]+)|([\t\s]+$)/gi, "");
-                },
-                toString: function() {
-                    return this.value;
-                }
-            });
-            return dataItemPrototype;
-        }
     })
     .factory("symbols", function() {
 
